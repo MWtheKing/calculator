@@ -31,7 +31,7 @@ const operate = (a, op, b) => {
 const display = function() {
 
     let display = document.querySelector(".display")
-    let displayText = ""
+    let displayText = "0"
     display.innerHTML = displayText
 
     let buttons = document.querySelectorAll("button")
@@ -41,7 +41,7 @@ const display = function() {
             let val = e.target.innerText
 
             if (e.target.id === "clear") {
-                displayText = "";
+                displayText = "0";
                 currentValue = "";
                 previousValue = null;
                 currentOperator = null;
