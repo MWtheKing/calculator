@@ -16,6 +16,9 @@ const operate = (a, op, b) => {
     a = Number(a);
     b = Number(b);
 
+    if (op === "÷") {return b === 0 ? 'Error' : divide(a, b);}
+    if (op === "×") {return multiply(a, b)}
+
     switch(op) {
         case "+": return add(a, b);
         case "-": return subtract(a, b);
@@ -66,6 +69,9 @@ const display = function() {
                 }
             } 
             else {
+                if (previousValue !== null && currentOperator === null && currentValue === "") {
+                    previousValue = null;
+                }
                 currentValue += val;
                 displayText = currentValue;
             }
