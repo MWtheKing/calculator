@@ -4,7 +4,7 @@ const subtract = function(a, b) { return a - b}
 
 const multiply = function(a, b) { return a * b}
 
-const divide = function(a, b) { return a / b}
+const divide = function(a, b) { return Math.round((a / b) * 100) / 100}
 
 
 let currentValue = "";
@@ -44,16 +44,20 @@ const display = function() {
                 currentOperator = null;
 
             } else if (e.target.className === "op") {
+                if (val === "-" && currentValue === "" && previousValue === null) {
+                    currentValue = "-"; 
+                    displayText = currentValue;
+            } else {
                 if (currentOperator && previousValue !== null && currentValue !== "") {
                     previousValue = operate(previousValue, currentOperator, Number(currentValue));
                     displayText = previousValue.toString();
-                } else {
+                } else if (previousValue === null && currentValue !== "") {
                     previousValue = Number(currentValue);
                 }
                 currentOperator = val;
                 currentValue = ""; 
-            } 
-            else if (e.target.id === "result") {
+            }
+            } else if (e.target.id === "result") {
                 if (currentOperator && previousValue !== null && currentValue !== "") {
                     previousValue = operate(previousValue, currentOperator, Number(currentValue));
                     displayText = previousValue.toString();
@@ -72,10 +76,5 @@ const display = function() {
         
 }
 
-// note to self, read the bugs i need to fix, when i input two numbers
-//  and then add another number or operator, it automatically should operate() 
-// and then whatever number or operator should be saved for the next operation
-        
-
-console.log(operate("1 + 12"))
+console.log(operate(-3, "+", 12))
 display()
