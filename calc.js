@@ -6,23 +6,24 @@ const multiply = function(a, b) { return a * b}
 
 const divide = function(a, b) { return a / b}
 
-let firstNum;
-let secondNum;
-let operator;
 
-const operate = function(equation) {
+let currentValue = "";
+let previousValue = null;
+let currentOperator = null;
+
+const operate = (a, op, b) => {
     
-    equation = equation.split(" ")
-        firstNum = Number(equation[0])
-        operator = equation[1]
-        secondNum = Number(equation[2])
+    a = Number(a);
+    b = Number(b);
 
-
-    if (operator == "+") { return add(firstNum, secondNum) }
-    if (operator == "-") { return subtract(firstNum, secondNum) }
-    if (operator == "*") { return multiply(firstNum, secondNum) }
-    if (operator == "/") { return divide(firstNum, secondNum) }
-}
+    switch(op) {
+        case "+": return add(a, b);
+        case "-": return subtract(a, b);
+        case "*": return multiply(a, b);
+        case "/": return b === 0 ? 'Error' : divide(a, b);
+        default: return NaN;
+    }
+};
 
 const display = function() {
 
@@ -34,20 +35,46 @@ const display = function() {
 
     buttons.forEach(button => {
         button.addEventListener("click", (e) => {
+            let val = e.target.innerText
+
             if (e.target.id === "clear") {
-                displayText = ""
-            } else if (e.target.id === "result") {
-                displayText = operate(displayText)
+                displayText = "";
+                currentValue = "";
+                previousValue = null;
+                currentOperator = null;
+
             } else if (e.target.className === "op") {
-                displayText += (` ${e.target.innerHTML} `)
-            } else {
-                displayText += e.target.innerText  
+                if (currentOperator && previousValue !== null && currentValue !== "") {
+                    previousValue = operate(previousValue, currentOperator, Number(currentValue));
+                    displayText = previousValue.toString();
+                } else {
+                    previousValue = Number(currentValue);
+                }
+                currentOperator = val;
+                currentValue = ""; 
+            } 
+            else if (e.target.id === "result") {
+                if (currentOperator && previousValue !== null && currentValue !== "") {
+                    previousValue = operate(previousValue, currentOperator, Number(currentValue));
+                    displayText = previousValue.toString();
+                    currentOperator = null;
+                    currentValue = ""; 
+                }
+            } 
+            else {
+                currentValue += val;
+                displayText = currentValue;
             }
-            display.innerHTML = displayText;   
+
+            display.innerText = displayText;  
         });
     });
         
 }
+
+// note to self, read the bugs i need to fix, when i input two numbers
+//  and then add another number or operator, it automatically should operate() 
+// and then whatever number or operator should be saved for the next operation
         
 
 console.log(operate("1 + 12"))
